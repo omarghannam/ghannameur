@@ -8,11 +8,9 @@ interface LoginFormData {
   password: string;
 }
 
-interface LoginFormErrors {
-  email?: string;
-  password?: string;
-  submit?: string;
-}
+type LoginFormErrors = {
+  [K in keyof LoginFormData | 'submit']?: string;
+};
 
 export default function Login() {
   const router = useRouter();
@@ -24,15 +22,18 @@ export default function Login() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    const fieldName = name as keyof LoginFormData;
+    
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [fieldName]: value,
     }));
+    
     // Clear error when user starts typing
-    if (errors[name]) {
+    if (fieldName in errors) {
       setErrors((prev) => ({
         ...prev,
-        [name]: '',
+        [fieldName]: '',
       }));
     }
   };
