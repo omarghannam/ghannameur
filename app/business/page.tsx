@@ -28,6 +28,10 @@ interface BusinessFormData {
   formattedAddress: string;
 }
 
+type FormErrors = {
+  [K in keyof BusinessFormData]?: string;
+};
+
 const initialFormData: BusinessFormData = {
   businessName: '',
   businessType: '',
@@ -51,7 +55,7 @@ export default function BusinessRegistration() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<BusinessFormData>(initialFormData);
-  const [errors, setErrors] = useState<Partial<BusinessFormData>>({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -60,7 +64,7 @@ export default function BusinessRegistration() {
       [name]: value,
     }));
     // Clear error when user starts typing
-    if (errors[name]) {
+    if (errors[name as keyof BusinessFormData]) {
       setErrors((prev) => ({
         ...prev,
         [name]: '',
@@ -79,7 +83,7 @@ export default function BusinessRegistration() {
   };
 
   const validateStep = (step: number) => {
-    const newErrors: Partial<BusinessFormData> = {};
+    const newErrors: FormErrors = {};
 
     if (step === 1) {
       if (!formData.businessName.trim()) newErrors.businessName = 'Business name is required';
