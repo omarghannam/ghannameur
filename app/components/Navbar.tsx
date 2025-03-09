@@ -6,10 +6,10 @@ import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 
 const navigation = [
-  { name: 'Home', href: '/' },
-  { name: 'Browse Deals', href: '/deals' },
-  { name: 'How It Works', href: '/how-it-works' },
-  { name: 'For Businesses', href: '/business' },
+  { name: 'Accueil', href: '/' },
+  { name: 'Voir les Offres', href: '/deals' },
+  { name: 'Comment ça Marche', href: '/how-it-works' },
+  { name: 'Pour les Commerçants', href: '/business' },
 ];
 
 export default function Navbar() {
@@ -21,7 +21,7 @@ export default function Navbar() {
             <div className="flex h-16 justify-between">
               <div className="flex">
                 <Link href="/" className="flex flex-shrink-0 items-center">
-                  <ShoppingBagIcon className="h-8 w-8 text-green-600" />
+                  <ShoppingBagIcon className="h-8 w-8 text-red-600" />
                   <span className="ml-2 text-xl font-bold text-gray-900">FoodSaver</span>
                 </Link>
                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
@@ -29,7 +29,7 @@ export default function Navbar() {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-green-600"
+                      className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-red-600"
                     >
                       {item.name}
                     </Link>
@@ -42,19 +42,19 @@ export default function Navbar() {
                   href="/login"
                   className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                 >
-                  Log in
+                  Connexion
                 </Link>
                 <Link
                   href="/signup"
-                  className="ml-3 rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500"
+                  className="ml-3 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
                 >
-                  Sign up
+                  S'inscrire
                 </Link>
               </div>
 
               <div className="-mr-2 flex items-center sm:hidden">
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
-                  <span className="sr-only">Open main menu</span>
+                  <span className="sr-only">Ouvrir le menu</span>
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                   ) : (
@@ -82,13 +82,13 @@ export default function Navbar() {
                   href="/login"
                   className="block rounded-md px-3 py-2 text-center text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                 >
-                  Log in
+                  Connexion
                 </Link>
                 <Link
                   href="/signup"
-                  className="block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500"
+                  className="block rounded-md bg-red-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-500"
                 >
-                  Sign up
+                  S'inscrire
                 </Link>
               </div>
             </div>
