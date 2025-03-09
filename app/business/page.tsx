@@ -59,15 +59,18 @@ export default function BusinessRegistration() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    const fieldName = name as keyof BusinessFormData;
+    
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [fieldName]: value,
     }));
+    
     // Clear error when user starts typing
-    if (errors[name as keyof BusinessFormData]) {
+    if (errors[fieldName]) {
       setErrors((prev) => ({
         ...prev,
-        [name]: '',
+        [fieldName]: '',
       }));
     }
   };
