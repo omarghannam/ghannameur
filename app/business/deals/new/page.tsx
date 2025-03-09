@@ -15,6 +15,10 @@ interface DealFormData {
   allergens: string[];
 }
 
+type FormErrors = {
+  [K in keyof DealFormData]?: string;
+};
+
 const categories = [
   'Bakery',
   'Restaurant',
@@ -47,7 +51,7 @@ export default function NewDeal() {
     category: '',
     allergens: [],
   });
-  const [errors, setErrors] = useState<Partial<DealFormData>>({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -56,7 +60,7 @@ export default function NewDeal() {
       [name]: value,
     }));
     // Clear error when user starts typing
-    if (errors[name]) {
+    if (errors[name as keyof DealFormData]) {
       setErrors((prev) => ({
         ...prev,
         [name]: '',
@@ -74,7 +78,7 @@ export default function NewDeal() {
   };
 
   const validateForm = () => {
-    const newErrors: Partial<DealFormData> = {};
+    const newErrors: FormErrors = {};
 
     if (!formData.title.trim()) newErrors.title = 'Title is required';
     if (!formData.description.trim()) newErrors.description = 'Description is required';
@@ -123,17 +127,17 @@ export default function NewDeal() {
       <div className="max-w-3xl mx-auto">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-            Create New Deal
+            Créer une Nouvelle Offre
           </h2>
           <p className="mt-4 text-lg text-gray-600">
-            List your surplus food items to reduce waste and earn extra revenue
+            Listez vos surplus alimentaires pour réduire le gaspillage et générer des revenus supplémentaires
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-12 space-y-8 bg-white p-8 rounded-lg shadow">
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-              Deal Title
+              Titre de l'Offre
             </label>
             <input
               type="text"
@@ -141,8 +145,8 @@ export default function NewDeal() {
               id="title"
               value={formData.title}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-              placeholder="e.g., End of Day Pastry Box"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
+              placeholder="ex: Box de Pâtisseries Fin de Journée"
             />
             {errors.title && (
               <p className="mt-2 text-sm text-red-600">{errors.title}</p>
@@ -159,8 +163,8 @@ export default function NewDeal() {
               rows={4}
               value={formData.description}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-              placeholder="Describe what's included in this deal..."
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
+              placeholder="Décrivez ce qui est inclus dans cette offre..."
             />
             {errors.description && (
               <p className="mt-2 text-sm text-red-600">{errors.description}</p>
@@ -170,7 +174,7 @@ export default function NewDeal() {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
               <label htmlFor="originalPrice" className="block text-sm font-medium text-gray-700">
-                Original Price ($)
+                Prix Original (MAD)
               </label>
               <input
                 type="number"
@@ -179,7 +183,7 @@ export default function NewDeal() {
                 id="originalPrice"
                 value={formData.originalPrice}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
               />
               {errors.originalPrice && (
                 <p className="mt-2 text-sm text-red-600">{errors.originalPrice}</p>
@@ -188,7 +192,7 @@ export default function NewDeal() {
 
             <div>
               <label htmlFor="discountedPrice" className="block text-sm font-medium text-gray-700">
-                Discounted Price ($)
+                Prix Réduit (MAD)
               </label>
               <input
                 type="number"
@@ -197,7 +201,7 @@ export default function NewDeal() {
                 id="discountedPrice"
                 value={formData.discountedPrice}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
               />
               {errors.discountedPrice && (
                 <p className="mt-2 text-sm text-red-600">{errors.discountedPrice}</p>
@@ -207,7 +211,7 @@ export default function NewDeal() {
 
           <div>
             <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
-              Quantity Available
+              Quantité Disponible
             </label>
             <input
               type="number"
@@ -215,7 +219,7 @@ export default function NewDeal() {
               id="quantity"
               value={formData.quantity}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
             />
             {errors.quantity && (
               <p className="mt-2 text-sm text-red-600">{errors.quantity}</p>
@@ -225,7 +229,7 @@ export default function NewDeal() {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
               <label htmlFor="pickupStartTime" className="block text-sm font-medium text-gray-700">
-                Pickup Start Time
+                Heure de Début de Retrait
               </label>
               <input
                 type="datetime-local"
@@ -233,7 +237,7 @@ export default function NewDeal() {
                 id="pickupStartTime"
                 value={formData.pickupStartTime}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
               />
               {errors.pickupStartTime && (
                 <p className="mt-2 text-sm text-red-600">{errors.pickupStartTime}</p>
@@ -242,7 +246,7 @@ export default function NewDeal() {
 
             <div>
               <label htmlFor="pickupEndTime" className="block text-sm font-medium text-gray-700">
-                Pickup End Time
+                Heure de Fin de Retrait
               </label>
               <input
                 type="datetime-local"
@@ -250,7 +254,7 @@ export default function NewDeal() {
                 id="pickupEndTime"
                 value={formData.pickupEndTime}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
               />
               {errors.pickupEndTime && (
                 <p className="mt-2 text-sm text-red-600">{errors.pickupEndTime}</p>
@@ -260,16 +264,16 @@ export default function NewDeal() {
 
           <div>
             <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-              Category
+              Catégorie
             </label>
             <select
               name="category"
               id="category"
               value={formData.category}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
             >
-              <option value="">Select a category</option>
+              <option value="">Sélectionnez une catégorie</option>
               {categories.map((category) => (
                 <option key={category} value={category}>
                   {category}
@@ -282,10 +286,8 @@ export default function NewDeal() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Allergens
-            </label>
-            <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <label className="block text-sm font-medium text-gray-700">Allergènes</label>
+            <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
               {allergens.map((allergen) => (
                 <div key={allergen} className="flex items-center">
                   <input
@@ -293,7 +295,7 @@ export default function NewDeal() {
                     id={`allergen-${allergen}`}
                     checked={formData.allergens.includes(allergen)}
                     onChange={() => handleAllergenChange(allergen)}
-                    className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    className="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
                   />
                   <label
                     htmlFor={`allergen-${allergen}`}
@@ -306,19 +308,12 @@ export default function NewDeal() {
             </div>
           </div>
 
-          <div className="flex justify-end space-x-4">
-            <button
-              type="button"
-              onClick={() => router.back()}
-              className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-            >
-              Cancel
-            </button>
+          <div className="flex justify-end">
             <button
               type="submit"
-              className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+              className="inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
             >
-              Create Deal
+              Créer l'Offre
             </button>
           </div>
         </form>
