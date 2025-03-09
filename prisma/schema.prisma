@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  firstName     String
+  lastName      String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  role          UserRole  @default(CUSTOMER)
+  orders        Order[]
+  reviews       Review[]
+  business      Business? @relation("BusinessOwner")
+}
+
+enum UserRole {
+  CUSTOMER
+  BUSINESS
+  ADMIN
+}
+
+model Business {
+  id            String    @id @default(cuid())
+  name          String
+  description   String
+  address       String
+  city          String
+  state         String
+  zipCode       String
+  phone         String
+  website       String?
+  openingHours  String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  owner         User      @relation("BusinessOwner", fields: [ownerId], references: [id])
+  ownerId       String    @unique
+  deals         Deal[]
+  reviews       Review[]
+  rating        Float     @default(0)
+  reviewCount   Int       @default(0)
+}
+
+model Deal {
+  id              String    @id @default(cuid())
+  title           String
+  description     String
+  originalPrice   Float
+  discountedPrice Float
+  quantity        Int
+  quantityLeft    Int
+  pickupStartTime DateTime
+  pickupEndTime   DateTime
+  category        String
+  allergens       String[]
+  status          DealStatus @default(ACTIVE)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  business        Business   @relation(fields: [businessId], references: [id])
+  businessId      String
+  orders          Order[]
+}
+
+enum DealStatus {
+  ACTIVE
+  SOLD_OUT
+  EXPIRED
+  CANCELLED
+}
+
+model Order {
+  id        String    @id @default(cuid())
+  quantity  Int
+  total     Float
+  status    OrderStatus @default(PENDING)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  user      User       @relation(fields: [userId], references: [id])
+  userId    String
+  deal      Deal       @relation(fields: [dealId], references: [id])
+  dealId    String
+  review    Review?
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model Review {
+  id          String    @id @default(cuid())
+  rating      Int
+  comment     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  business    Business  @relation(fields: [businessId], references: [id])
+  businessId  String
+  order       Order     @relation(fields: [orderId], references: [id])
+  orderId     String    @unique
+} 
