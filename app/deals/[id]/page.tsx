@@ -3,6 +3,7 @@
 import React from 'react';
 import { useParams } from 'next/navigation';
 import { MapPinIcon, ClockIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 
 // Mock data - in a real app, this would come from an API
 const deals = [
@@ -113,8 +114,14 @@ export default function DealPage() {
         <div className="lg:grid lg:grid-cols-2 lg:gap-x-8">
           {/* Image gallery */}
           <div className="aspect-h-3 aspect-w-4 lg:aspect-h-4 lg:aspect-w-5 sm:overflow-hidden sm:rounded-lg">
-            <div className="h-96 w-full bg-gray-200 flex items-center justify-center text-gray-500">
-              [Image Placeholder]
+            <div className="relative h-96 w-full">
+              <Image
+                src={deal.image}
+                alt={deal.title}
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
           </div>
 
