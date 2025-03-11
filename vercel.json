@@ -5,7 +5,7 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "env": {
-    "NEXTAUTH_URL": "https://gangnameurs-projects.vercel.app",
+    "NEXTAUTH_URL": "https://kifkif.life",
     "NODE_ENV": "production"
   }
 } 

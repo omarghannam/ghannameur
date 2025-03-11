@@ -4,44 +4,41 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface FormData {
-  firstName: string;
-  lastName: string;
   email: string;
   password: string;
   confirmPassword: string;
+  firstName: string;
+  lastName: string;
 }
 
-interface FormErrors {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
-  submit?: string;
-}
+type FormErrors = {
+  [K in keyof FormData | 'submit']?: string;
+};
 
 export default function SignUp() {
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
-    firstName: '',
-    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
+    firstName: '',
+    lastName: '',
   });
   const [errors, setErrors] = useState<FormErrors>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    const fieldName = name as keyof FormData;
+    
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [fieldName]: value,
     }));
     // Clear error when user starts typing
-    if (errors[name]) {
+    if (fieldName in errors) {
       setErrors((prev) => ({
         ...prev,
-        [name]: '',
+        [fieldName]: '',
       }));
     }
   };
