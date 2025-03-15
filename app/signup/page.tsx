@@ -25,6 +25,7 @@ export default function SignUp() {
     lastName: '',
   });
   const [errors, setErrors] = useState<FormErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -78,17 +79,37 @@ export default function SignUp() {
     e.preventDefault();
     
     if (validateForm()) {
+      setIsLoading(true);
       try {
-        // Here you would typically make an API call to create the user
-        console.log('Form submitted:', formData);
+        const response = await fetch('/api/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to create account');
+        }
+
         // Redirect to login page after successful signup
         router.push('/login');
       } catch (error) {
         console.error('Error creating account:', error);
         setErrors((prev) => ({
           ...prev,
-          submit: 'Failed to create account. Please try again.',
+          submit: error instanceof Error ? error.message : 'Failed to create account. Please try again.',
         }));
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -224,9 +245,10 @@ export default function SignUp() {
             <div>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
               >
-                Sign up
+                {isLoading ? 'Signing up...' : 'Sign up'}
               </button>
             </div>
           </form>
